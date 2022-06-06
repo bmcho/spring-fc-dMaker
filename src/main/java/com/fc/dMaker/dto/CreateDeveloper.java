@@ -1,6 +1,7 @@
 package com.fc.dMaker.dto;
 
 
+import com.fc.dMaker.entity.Developer;
 import com.fc.dMaker.type.DeveloperLevel;
 import com.fc.dMaker.type.DeveloperSkillType;
 import lombok.*;
@@ -33,7 +34,7 @@ public class CreateDeveloper {
         @Size(min = 3, max = 20, message = "name size must 3~20")
         private String name;
         @Min(18)
-        private Integer Age;
+        private Integer age;
     }
 
     @Getter
@@ -47,5 +48,14 @@ public class CreateDeveloper {
         private Integer experienceYears;
 
         private String memberId;
+
+        public static Response fromEntity(Developer developer) {
+            return Response.builder()
+                    .developerLevel(developer.getDeveloperLevel())
+                    .developerSkillType(developer.getDeveloperSkillType())
+                    .experienceYears(developer.getExperienceYears())
+                    .memberId(developer.getMemberId())
+                    .build();
+        }
     }
 }
