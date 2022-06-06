@@ -10,7 +10,7 @@ import com.fc.dMaker.entity.RetiredDeveloper;
 import com.fc.dMaker.exception.DMakerException;
 import com.fc.dMaker.repository.DeveloperRepository;
 import com.fc.dMaker.repository.RetiredDeveloperRepository;
-import com.fc.dMaker.type.DMakerErrorCode;
+import com.fc.dMaker.exception.DMakerErrorCode;
 import com.fc.dMaker.type.DeveloperLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

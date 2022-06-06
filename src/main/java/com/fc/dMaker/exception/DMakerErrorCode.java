@@ -1,4 +1,4 @@
-package com.fc.dMaker.type;
+package com.fc.dMaker.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

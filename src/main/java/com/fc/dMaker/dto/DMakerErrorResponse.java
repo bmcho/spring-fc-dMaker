@@ -1,6 +1,6 @@
 package com.fc.dMaker.dto;
 
-import com.fc.dMaker.type.DMakerErrorCode;
+import com.fc.dMaker.exception.DMakerErrorCode;
 import lombok.*;
 
 @Getter

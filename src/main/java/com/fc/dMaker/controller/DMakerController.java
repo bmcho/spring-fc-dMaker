@@ -1,14 +1,14 @@
 package com.fc.dMaker.controller;
 
-import com.fc.dMaker.dto.*;
-import com.fc.dMaker.exception.DMakerException;
+import com.fc.dMaker.dto.CreateDeveloper;
+import com.fc.dMaker.dto.DeveloperDetailDto;
+import com.fc.dMaker.dto.DeveloperDto;
+import com.fc.dMaker.dto.EditDeveloper;
 import com.fc.dMaker.service.DMakerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class DMakerController {
     public DeveloperDetailDto editDeveloper(
             @PathVariable String memberId,
             @Valid @RequestBody EditDeveloper.Request request
-            ) {
+    ) {
         log.info("request : {}", request);
 
         return dMakerService.editDeveloper(memberId, request);
@@ -54,17 +54,5 @@ public class DMakerController {
     @DeleteMapping("/developer/{memberId}")
     public DeveloperDetailDto deleteDeveloper(@PathVariable String memberId) {
         return dMakerService.deleteDeveloper(memberId);
-    }
-
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ExceptionHandler(DMakerException.class)
-    public DMakerErrorResponse handleException(DMakerException e, HttpServletRequest request) {
-        log.info("error Code: {}, url: {}, message: {}",
-                e.getDMakerErrorCode(), request.getRequestURL(), e.getDetailMessage());
-
-        return DMakerErrorResponse.builder()
-                .errorCode(e.getDMakerErrorCode())
-                .errorMessage(e.getDetailMessage())
-                .build();
     }
 }
