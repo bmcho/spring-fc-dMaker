@@ -13,6 +13,7 @@ import com.fc.dMaker.repository.RetiredDeveloperRepository;
 import com.fc.dMaker.type.DMakerErrorCode;
 import com.fc.dMaker.type.DeveloperLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DMakerService {
     private final DeveloperRepository developerRepository;
     private final RetiredDeveloperRepository retiredDeveloper;
@@ -85,12 +87,11 @@ public class DMakerService {
                 request.getExperienceYears());
     }
 
-
     @Transactional
     public DeveloperDetailDto editDeveloper(String memberId, EditDeveloper.Request request) {
         validateEditDeveloperRequest(request, memberId);
 
-        Developer developer =  developerRepository.findByMemberId(memberId)
+        Developer developer = developerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new DMakerException(DMakerErrorCode.NO_DEVELOPER));
 
         developer.setDeveloperLevel(request.getDeveloperLevel());
@@ -104,8 +105,7 @@ public class DMakerService {
         validateDeveloperLevel(
                 request.getDeveloperLevel(),
                 request.getExperienceYears());
-     }
-
+    }
 
     /*
     Get Method
@@ -140,4 +140,3 @@ public class DMakerService {
         return DeveloperDetailDto.fromEntity(developer);
     }
 }
-
