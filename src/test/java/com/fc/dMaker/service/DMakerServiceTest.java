@@ -17,11 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static com.fc.dMaker.code.StatusCode.EMPLOYED;
+import static com.fc.dMaker.constant.DMakerConstant.MAX_JUNIOR_EXPERIENCE_YEARS;
 import static com.fc.dMaker.constant.DMakerConstant.MIN_SENIOR_EXPERIENCE_YEARS;
 import static com.fc.dMaker.exception.DMakerErrorCode.DUPLICATED_MEMBER_ID;
 import static com.fc.dMaker.exception.DMakerErrorCode.LEVEL_EXPERIENCE_YEARS_NOT_MATCHED;
-import static com.fc.dMaker.type.DeveloperLevel.JUNGNIOR;
-import static com.fc.dMaker.type.DeveloperLevel.SENIOR;
+import static com.fc.dMaker.type.DeveloperLevel.*;
 import static com.fc.dMaker.type.DeveloperSkillType.BACK_END;
 import static com.fc.dMaker.type.DeveloperSkillType.FRONT_END;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -87,7 +87,7 @@ class DMakerServiceTest {
     }
 
     @Test
-    void createDeveloperTest_fail_low_senior() {
+    void createDeveloperTest_fail_with_unmatched_level() {
         //given
         //when
         //then
@@ -102,18 +102,37 @@ class DMakerServiceTest {
     @Test
     void createDeveloperTest_failed_with_duplication() {
         //given
-
-        given(developerRepository.findByMemberId(anyString()))
-                .willReturn(Optional.of(defaultDeveloper));
-
         //when
         //then
         DMakerException dMakerException = assertThrows(DMakerException.class,
                 () -> dMakerService.createDeveloper(
-                        getCreateRequest(SENIOR, BACK_END, MIN_SENIOR_EXPERIENCE_YEARS)
-                ));
+                        getCreateRequest(JUNIOR, FRONT_END,
+                                MAX_JUNIOR_EXPERIENCE_YEARS + 1)
+                )
+        );
+        assertEquals(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED,
+                dMakerException.getDMakerErrorCode()
+        );
 
-        assertEquals(DUPLICATED_MEMBER_ID, dMakerException.getDMakerErrorCode());
+        dMakerException = assertThrows(DMakerException.class,
+                () -> dMakerService.createDeveloper(
+                        getCreateRequest(JUNGNIOR, FRONT_END,
+                                MIN_SENIOR_EXPERIENCE_YEARS + 1)
+                )
+        );
+        assertEquals(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED,
+                dMakerException.getDMakerErrorCode()
+        );
+
+        dMakerException = assertThrows(DMakerException.class,
+                () -> dMakerService.createDeveloper(
+                        getCreateRequest(SENIOR, FRONT_END,
+                                MIN_SENIOR_EXPERIENCE_YEARS - 1)
+                )
+        );
+        assertEquals(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED,
+                dMakerException.getDMakerErrorCode()
+        );
 
     }
 }

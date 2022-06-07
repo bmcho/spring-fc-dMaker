@@ -23,7 +23,10 @@ import java.util.stream.Collectors;
 
 import static com.fc.dMaker.constant.DMakerConstant.MAX_JUNIOR_EXPERIENCE_YEARS;
 import static com.fc.dMaker.constant.DMakerConstant.MIN_SENIOR_EXPERIENCE_YEARS;
+import static com.fc.dMaker.exception.DMakerErrorCode.*;
 import static com.fc.dMaker.exception.DMakerErrorCode.NO_DEVELOPER;
+import static com.fc.dMaker.type.DeveloperLevel.*;
+import static com.fc.dMaker.type.DeveloperLevel.SENIOR;
 
 @Service
 @RequiredArgsConstructor
@@ -54,17 +57,11 @@ public class DMakerService {
     }
 
     private void validateDeveloperLevel(DeveloperLevel developerLevel, Integer experienceYears) {
-        if (developerLevel == DeveloperLevel.SENIOR
-                && experienceYears < MIN_SENIOR_EXPERIENCE_YEARS) {
-            throw new DMakerException(DMakerErrorCode.LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
+        if (experienceYears < developerLevel.getMinExperienceYears() ||
+                experienceYears > developerLevel.getMaxExperienceYears()) {
+            throw new DMakerException(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
         }
-        if (developerLevel == DeveloperLevel.JUNGNIOR
-                && (experienceYears < MAX_JUNIOR_EXPERIENCE_YEARS || experienceYears > MIN_SENIOR_EXPERIENCE_YEARS)) {
-            throw new DMakerException(DMakerErrorCode.LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
-        }
-        if (developerLevel == DeveloperLevel.JUNIOR && experienceYears > MAX_JUNIOR_EXPERIENCE_YEARS) {
-            throw new DMakerException(DMakerErrorCode.LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
-        }
+
     }
 
     private void validateCreateDeveloperRequest(@NonNull CreateDeveloper.Request request) {
@@ -75,7 +72,7 @@ public class DMakerService {
 
         developerRepository.findByMemberId(request.getMemberId())
                 .ifPresent((developer) -> {
-                    throw new DMakerException(DMakerErrorCode.DUPLICATED_MEMBER_ID);
+                    throw new DMakerException(DUPLICATED_MEMBER_ID);
                 });
     }
 
